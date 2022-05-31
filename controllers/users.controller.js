@@ -13,6 +13,7 @@ const { Cart } = require('../models/cart.model');
 const { catchAsync } = require('../utils/catchAsync');
 const { AppError } = require('../utils/appError');
 const { Product } = require('../models/product.model');
+const { ProductInCart } = require('../models/productInCart');
 
 dotenv.config({ path: './config.env' });
 
@@ -36,7 +37,7 @@ const createUser = catchAsync(async (req, res, next) => {
   res.status(201).json({ newUser });
 });
 
-//-----------Iniciar sesion 
+//-----------Iniciar sesion
 
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -64,26 +65,28 @@ const login = catchAsync(async (req, res, next) => {
 //-----------Obtener todos los productos que el usuario a creado
 
 const getUserProducts = catchAsync(async (req, res, next) => {
-  
   const products = await Product.findAll({
     where: { userId: req.user.id },
-    include: [
-      { model: User },
-    ],
+    include: [{ model: User }],
   });
   res.status(200).json({
     products,
   });
-  
 });
 
 //-----------Actualizar usuario
 
 const updateUser = catchAsync(async (req, res, next) => {
-  const { user } = req;
+  // const { userName, email } = req.body;
+  //   const user = await User.findOne({ where: { id: req.user.id } });
+
+  //   await user.update({ userName, email });
+  //   res.status(200).json({ status: 'success' });
+
+  const { id } = req.params;
   const { userName, email } = req.body;
 
-  await user.update({ userName, email });
+  await User.update({ userName, email }, { where: { id } });
 
   res.status(200).json({ status: 'success' });
 });
@@ -91,9 +94,9 @@ const updateUser = catchAsync(async (req, res, next) => {
 //-----------Eliminar usuario
 
 const deleteUser = catchAsync(async (req, res, next) => {
-  const { user } = req;
+  const { id } = req.params;
 
-  await user.update({ status: 'deleted' });
+  await User.update({ status: 'deleted' }, { where: { id } });
 
   res.status(200).json({
     status: 'success',
@@ -106,14 +109,16 @@ const getUserOrders = catchAsync(async (req, res, next) => {
   const orders = await Order.findAll({
     where: { userId: req.user.id },
     include: [
-      {model:Cart, where:{status:"purchased"}},
-      { model: Product },
+      {
+        model: Cart,
+        where: { status: 'purchased' },
+        include: [{ model: ProductInCart }],
+      },
     ],
   });
   res.status(200).json({
     orders,
   });
-  
 });
 
 //-----------Obtener todas las Ordenes que el usuario a creado dado un Id
@@ -123,7 +128,6 @@ const getUserOrdersById = catchAsync(async (req, res, next) => {
   const order = await Order.findOne({ where: { id } });
   res.status(200).json({ order });
 });
-
 
 const checkToken = catchAsync(async (req, res, next) => {
   res.status(200).json({ user: req.sessionUser });

@@ -7,9 +7,6 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
-  getCategories,
-  createCategory,
-  updateCategory,
 } = require('../controllers/products.controllers');
 const { checkToken } = require('../controllers/users.controller');
 const {
@@ -19,8 +16,6 @@ const {
 const { checkValidations } = require('../middlewares/validations.middlewares');
 
 const router = express.Router();
-
-
 
 //Obtener todos los Productos
 router.get('/', getAllProducts);
@@ -46,14 +41,5 @@ router.patch('/:id', protectAccountOwner, updateProduct);
 
 //Eliminar producto
 router.delete('/:id', protectAccountOwner, deleteProduct);
-
-//Obtener todas las categorias activas
-router.get('/categories', getCategories);
-
-//Crear categoria 
-router.post('/categories', createCategory);
-
-//Obtener todas las categorias activas dado un id
-router.patch('/categories/:id', updateCategory);
 
 module.exports = { productsRouter: router };

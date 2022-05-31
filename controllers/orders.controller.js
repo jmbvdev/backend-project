@@ -28,13 +28,13 @@ const getAllOrders = catchAsync(async (req, res, next) => {
 const createOrder = catchAsync(async (req, res, next) => {
   const { cartId } = req.body;
   const cart = await Cart.findOne({
-    where:{userId:req.user.id}
-  })
+    where: { userId: req.user.id },
+  });
 
   const newOrder = await Order.create({
     userId,
     cartId,
-    totalPrice
+    totalPrice,
   });
 
   res.status(201).json({ newOrder });
@@ -48,7 +48,6 @@ const updateOrder = catchAsync(async (req, res, next) => {
   await order.update({ status: 'purchased' });
   res.status(200).json({ status: 'success' });
 });
-
 
 //Eliminar orden
 const deleteOrder = catchAsync(async (req, res, next) => {

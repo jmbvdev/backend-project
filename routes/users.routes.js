@@ -42,7 +42,6 @@ router.post(
 
 router.post('/login', login);
 
-
 // Apply protectToken middleware
 router.use(protectToken);
 

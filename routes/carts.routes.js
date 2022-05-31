@@ -19,10 +19,10 @@ router.get('/check-token', checkToken);
 router.post('/add-product', addProduct);
 
 //Actualizar algún producto del carrito (incrementar o decrementar cantidad { productId, newQty })
-router.patch('/update-cart', updateCart);
+router.patch('/update-product/:id', updateCart);
 
 //Eliminar producto del carrito
-router.delete('/:productId', removeProductCart);
+router.delete('/:id', removeProductCart);
 
 //Realizar compra de todos los productos en el carrito con status active
 router.post('/purchase', purchase);

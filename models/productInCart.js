@@ -23,7 +23,7 @@ const ProductInCart = db.define('productInCart', {
   status: {
     type: DataTypes.STRING,
     defaultValue: 'active',
-  }
+  },
 });
 
 module.exports = { ProductInCart };
